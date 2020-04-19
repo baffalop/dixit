@@ -1,6 +1,6 @@
 <template>
   <div id="welcome-screen">
-    <form method="post" @submit="onSubmit">
+    <form method="post" @submit.prevent="onSubmit">
       <label for="name">Your name:</label>
       <input id="name" type="text" required v-model="name" />
 
@@ -16,8 +16,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 export default class HelloWorld extends Vue {
   @Prop() private name!: string
 
-  private onSubmit () {
-    console.log(`Got the name ${this.name}`)
+  private async onSubmit () {
   }
 }
 </script>
