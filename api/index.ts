@@ -1,8 +1,8 @@
 import express from 'express'
-import https from 'https'
+import http from 'http'
 
 const app = express()
-const server = https.createServer(app)
+const server = http.createServer(app)
 
 app.post('/login', express.json())
 app.post('/login', (req, res) => {
@@ -11,6 +11,7 @@ app.post('/login', (req, res) => {
   }
 
   const name: string = req.body.name
+  console.log(`got name ${name}`)
   res.status(200).send({
     name: name,
   })

@@ -10,13 +10,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
+import axios from 'axios'
 
 @Component
 export default class HelloWorld extends Vue {
-  @Prop() private name!: string
+  private name!: string
 
   private async onSubmit () {
+    const { data: myName } = await axios.post('/login', {
+      name: this.name,
+    })
+    console.log('And my name is...')
+    console.log(myName)
   }
 }
 </script>
