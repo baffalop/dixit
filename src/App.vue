@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <img class="logo" alt="Dixit logo" src="./assets/logo-dixit.png">
-    <WelcomeScreen />
+    <div class="main">
+      <WelcomeScreen />
+    </div>
   </div>
 </template>
 
@@ -19,17 +21,37 @@ export default class App extends Vue {}
 </script>
 
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital@0;1&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Trade+Winds&display=swap');
+
+  body, html {
+    background: #140d19;
+    font-size: 16pt;
+  }
+</style>
+
+<style scoped>
   #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
+    color: #e9c98e;
+    font-family: 'Noto Serif', serif;
+    font-style: italic;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
     margin-top: 60px;
   }
 
   .logo {
     width: 80%;
     max-width: 600px;
+    margin-bottom: 40px;
+  }
+
+  .dialogue {
+    display: inline-block;
+    padding: 20px;
+    background: #2b2026;
+    /*box-shadow: inset 0 0 20px #130d17;*/
+    min-width: 200px;
   }
 </style>
