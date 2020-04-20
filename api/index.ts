@@ -1,5 +1,9 @@
 import express from 'express'
 import http from 'http'
+import Game from './model/game'
+import Player from './model/player'
+
+const game = new Game()
 
 const app = express()
 const server = http.createServer(app)
@@ -11,9 +15,21 @@ app.post('/login', (req, res) => {
   }
 
   const name: string = req.body.name
-  console.log(`got name ${name}`)
+  console.log(`Got name ${name}`)
+
+  if (game.hasPlayerName(name)) {
+    console.log(`Game has player with that name. Responding with error.`)
+    res.status(400).send(`We already have a '${name}'. Try for something original.`)
+    return
+  }
+
+  const player = new Player(name)
+  game.addPlayer(player)
+
+  console.log('Player added to game')
   res.status(200).send({
     name: name,
+    hand: player.getHand()
   })
 })
 

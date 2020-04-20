@@ -6,6 +6,7 @@
     <form method="post" @submit.prevent="onSubmit">
       <input id="name" type="text" size="30" required v-model="name" />
       <input type="submit" value="BEGIN">
+      <p class="message" v-if="message">{{ message }}</p>
     </form>
   </div>
 </template>
@@ -17,13 +18,28 @@ import axios from 'axios'
 @Component
 export default class HelloWorld extends Vue {
   private name = ''
+  private message = ''
 
   private async onSubmit () {
-    const { data: myName } = await axios.post('/login', {
-      name: this.name,
-    })
-    console.log('And my name is...')
-    console.log(myName)
+    try {
+      const { data: response } = await axios.post('/login', { name: this.name })
+      console.log('We\'re in!')
+      console.log(response)
+      this.message = ''
+    } catch (e) {
+      console.log('Shoot!')
+      console.log(e.response || e.request)
+
+      if (e.response) {
+        if (e.response.status < 500) {
+          this.message = e.response.data
+        } else {
+          this.message = `The server didn't like that... (status ${e.response.status})`
+        }
+      } else {
+        this.message = 'Did Nikita remember to run the server?'
+      }
+    }
   }
 }
 </script>
@@ -51,5 +67,10 @@ export default class HelloWorld extends Vue {
     flex-direction: column;
     align-content: center;
     align-items: center;
+  }
+
+  .message {
+    color: #d7686a;
+    font-size: 0.8em;
   }
 </style>
