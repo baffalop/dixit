@@ -4,7 +4,7 @@
       Welcome. Please enter your name to begin.
     </p>
     <form method="post" @submit.prevent="onSubmit">
-      <input id="name" type="text" size="20" required v-model="name" />
+      <input id="name" type="text" size="30" required v-model="name" />
       <input type="submit" value="BEGIN">
     </form>
   </div>
@@ -42,7 +42,7 @@ export default class HelloWorld extends Vue {
   }
 
   input[type=submit]:hover {
-    box-shadow: inset 0 0 24px #2f242a;
+    box-shadow: inset 0 0 25px #241c20;
     cursor: pointer;
   }
 
