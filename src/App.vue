@@ -25,7 +25,7 @@ export default class App extends Vue {}
   @import url('https://fonts.googleapis.com/css2?family=Trade+Winds&display=swap');
 
   body, html {
-    background: #140d19;
+    background: #1f1923;
     font-size: 16pt;
   }
 </style>
@@ -49,9 +49,9 @@ export default class App extends Vue {}
 
   .dialogue {
     display: inline-block;
-    padding: 20px;
-    background: #2b2026;
-    /*box-shadow: inset 0 0 20px #130d17;*/
+    padding: 10px 15px;
+    background: #462b36;
+    box-shadow: 5px 5px 15px 0 #0e0a1073;
     min-width: 200px;
   }
 </style>
