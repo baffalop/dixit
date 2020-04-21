@@ -29,7 +29,8 @@ app.post('/login', (req, res) => {
   console.log('Player added to game')
   res.status(200).send({
     name: name,
-    hand: player.getHand()
+    hand: player.getHand(),
+    players: game.getPlayers(player),
   })
 })
 

@@ -17,6 +17,13 @@ export default class Game {
     this.players.push(player)
   }
 
+  public getPlayers (excluding: Player|null) {
+    if (!excluding) {
+      return this.players
+    }
+    return this.players.filter(player => player !== excluding)
+  }
+
   public hasPlayerName (name: string) {
     return this.players.some(player => player.getName() == name)
   }
