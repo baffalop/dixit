@@ -1,5 +1,14 @@
 module.exports = {
   devServer: {
-    proxy: 'http://localhost:3000',
+    proxy: {
+      '^/play': {
+        target: 'ws://localhost:3000',
+        ws: true,
+      },
+      '/': {
+        target: 'http://localhost:3000',
+        ws: false,
+      },
+    },
   },
 }
