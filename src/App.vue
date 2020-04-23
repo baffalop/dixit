@@ -2,7 +2,8 @@
   <div id="app">
     <img class="logo" alt="Dixit logo" src="./assets/logo-dixit.png">
     <div class="main">
-      <WelcomeScreen :initialName="name" :message="loginError" @submit="onSubmit" />
+      <Loader v-if="loading" />
+      <WelcomeScreen v-else :initialName="name" :message="loginError" @submit="onSubmit" />
     </div>
   </div>
 </template>
@@ -10,26 +11,32 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import WelcomeScreen from './components/WelcomeScreen.vue'
+import Loader from '@/components/Loader.vue'
 import axios from 'axios'
 
 @Component({
   components: {
     WelcomeScreen,
+    Loader,
   },
 })
 
 export default class App extends Vue {
   private name = ''
   private loginError = ''
+  private loading = false
 
   private async onSubmit ({ name }: Record<string, string>) {
+    this.loading = true
     this.name = name
 
     try {
       const { data: response } = await axios.post('/login', { name: this.name })
+      this.loading = false
       console.log('We\'re in!')
       console.log(response)
     } catch (e) {
+      this.loading = false
       console.log('Shoot!')
       console.log(e)
 
