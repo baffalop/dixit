@@ -4,7 +4,7 @@
       Welcome. Please enter your name to begin.
     </p>
     <form method="post" @submit.prevent="onSubmit">
-      <input id="name" type="text" size="30" required v-model="name" />
+      <input type="text" size="30" required v-model="name" />
       <input type="submit" value="BEGIN">
       <p class="message" v-if="message">{{ message }}</p>
     </form>
@@ -12,34 +12,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import axios from 'axios'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class HelloWorld extends Vue {
-  private name = ''
-  private message = ''
+  @Prop({ default: '' }) initialName!: string
+  @Prop({ default: '' }) message!: string
 
-  private async onSubmit () {
-    try {
-      const { data: response } = await axios.post('/login', { name: this.name })
-      console.log('We\'re in!')
-      console.log(response)
-      this.message = ''
-    } catch (e) {
-      console.log('Shoot!')
-      console.log(e.response || e.request)
+  private name = this.initialName
 
-      if (e.response) {
-        if (e.response.status < 500) {
-          this.message = e.response.data
-        } else {
-          this.message = `The server didn't like that... (status ${e.response.status})`
-        }
-      } else {
-        this.message = 'Did Nikita remember to run the server?'
-      }
-    }
+  private onSubmit () {
+    this.$emit('submit', {
+      name: name,
+    })
   }
 }
 </script>

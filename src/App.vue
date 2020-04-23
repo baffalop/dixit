@@ -2,7 +2,7 @@
   <div id="app">
     <img class="logo" alt="Dixit logo" src="./assets/logo-dixit.png">
     <div class="main">
-      <WelcomeScreen />
+      <WelcomeScreen :initialName="name" :message="loginError" @submit="onSubmit" />
     </div>
   </div>
 </template>
@@ -10,6 +10,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import WelcomeScreen from './components/WelcomeScreen.vue'
+import axios from 'axios'
 
 @Component({
   components: {
@@ -17,7 +18,33 @@ import WelcomeScreen from './components/WelcomeScreen.vue'
   },
 })
 
-export default class App extends Vue {}
+export default class App extends Vue {
+  private name = ''
+  private loginError = ''
+
+  private async onSubmit ({ name }: Record<string, string>) {
+    this.name = name
+
+    try {
+      const { data: response } = await axios.post('/login', { name: this.name })
+      console.log('We\'re in!')
+      console.log(response)
+    } catch (e) {
+      console.log('Shoot!')
+      console.log(e)
+
+      if (e.response) {
+        if (e.response.status < 500) {
+          this.loginError = e.response.data
+        } else {
+          this.loginError = `The server didn't like that... (status ${e.response.status})`
+        }
+      } else {
+        this.loginError = 'Did Nikita remember to run the server?'
+      }
+    }
+  }
+}
 </script>
 
 <style>
