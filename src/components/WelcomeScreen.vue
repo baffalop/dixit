@@ -16,8 +16,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class HelloWorld extends Vue {
-  @Prop({ default: '' }) initialName!: string
-  @Prop({ default: '' }) message!: string
+  @Prop({ default: '' }) readonly initialName!: string
+  @Prop({ default: '' }) readonly message!: string
 
   private name = this.initialName
 
