@@ -23,7 +23,7 @@ export default class HelloWorld extends Vue {
 
   private onSubmit () {
     this.$emit('submit', {
-      name: name,
+      name: this.name,
     })
   }
 }

@@ -26,7 +26,9 @@ export default class App extends Vue {
   private loginError = ''
   private loading = false
 
-  private async onSubmit ({ name }: Record<string, string>) {
+  private async onSubmit ({ name }: { name: string }) {
+    console.log(`Submitting name: ${name}`)
+
     this.loading = true
     this.name = name
 
