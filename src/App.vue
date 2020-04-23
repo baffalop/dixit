@@ -69,8 +69,9 @@ export default class App extends Vue {
   }
 
   .logo {
-    width: 80%;
-    max-width: 600px;
+    height: 25vh;
+    max-height: 220px;
+    transform: translateX(-3%);
     margin-bottom: 40px;
   }
 
