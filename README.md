@@ -1,24 +1,29 @@
-# dixit
+# Dixit
 
-## Project setup
+A realtime online version of the Dixit boardgame. Made using WebSockets, Node (TypeScript, Express), and Vue (TypeScript).
+
+### Project setup
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Run development servers
+Hot-reload Vue server
+```
+npm run vue
+```
+
+Node API/WebSocket server (proxied by Vue)
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Build
 ```
-npm run build
+npm run buildall
 ```
 
-### Lints and fixes files
+### Lint and fix files
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
