@@ -2,7 +2,11 @@
   <div id="app">
     <img class="logo" alt="Dixit logo" src="./assets/logo-dixit.png">
     <div class="main">
-      <Loader v-if="loading" />
+      <div v-if="playing">
+        <h1>We're in!</h1>
+        <button @click="quitPlay()">Quit</button>
+      </div>
+      <Loader v-else-if="loading" />
       <WelcomeScreen v-else :initialName="name" :message="loginError" @submit="onSubmit" />
     </div>
   </div>
@@ -13,6 +17,11 @@ import { Component, Vue } from 'vue-property-decorator'
 import WelcomeScreen from './components/WelcomeScreen.vue'
 import Loader from '@/components/Loader.vue'
 import axios from 'axios'
+import { PlayClient, ConnectError } from '@/util/PlayClient'
+
+const LOGIN_ENDPOINT = '/login'
+
+class LoginError extends Error {}
 
 @Component({
   components: {
@@ -23,35 +32,101 @@ import axios from 'axios'
 
 export default class App extends Vue {
   private name = ''
+  private hand: string[] = []
+
   private loginError = ''
   private loading = false
+  private playing = false
+
+  private playClient: PlayClient | null = null
 
   private async onSubmit ({ name }: { name: string }) {
     console.log(`Submitting name: ${name}`)
 
-    this.loading = true
     this.name = name
+    this.loading = true
 
     try {
-      const { data: response } = await axios.post('/login', { name: this.name })
+      const { hand }: { name: string; hand: string[] } = await this.login()
+      this.hand = hand
+      await this.connect()
+      console.log('Connected')
+
       this.loading = false
-      console.log('We\'re in!')
-      console.log(response)
+      this.playing = true
     } catch (e) {
       this.loading = false
+      this.loginError = e.message
+    }
+  }
+
+  /**
+   * @throws LoginError
+   */
+  private async login (): Promise<{ name: string; hand: string[] }> {
+    try {
+      const { data: response } = await axios.post(LOGIN_ENDPOINT, { name: this.name })
+
+      console.log('We\'re in!')
+      console.log(response)
+
+      if (!response.hand) {
+        console.log('Error: Login did not return hand')
+        throw new LoginError('Got an unexpected response. Please try again.')
+      }
+
+      return response
+    } catch (e) {
+      if (e instanceof LoginError) {
+        throw e
+      }
+
       console.log('Shoot!')
       console.log(e)
 
+      let errorMessage: string
       if (e.response) {
         if (e.response.status < 500) {
-          this.loginError = e.response.data
+          errorMessage = e.response.data
         } else {
-          this.loginError = `The server didn't like that... (status ${e.response.status})`
+          errorMessage = `The server didn't like that... (status ${e.response.status})`
         }
       } else {
-        this.loginError = 'Did Nikita remember to run the server?'
+        errorMessage = 'Did Nikita remember to run the server?'
       }
+
+      throw new LoginError(errorMessage)
     }
+  }
+
+  /**
+   * @throws ConnectError
+   */
+  private async connect () {
+    this.playClient = new PlayClient(this.name)
+    try {
+      await this.playClient.login(this.onMessage, this.onSocketClosed)
+    } catch (e) {
+      throw new LoginError(e.message + ' Please try again.')
+    }
+  }
+
+  private quitPlay () {
+    this.playClient?.quit()
+    this.playing = false
+    this.loginError = ''
+  }
+
+  private onMessage (data: object | string) {
+    console.log('Message received')
+    console.log(data)
+  }
+
+  private onSocketClosed (ev: CloseEvent) {
+    console.log('Socket closed')
+    console.log(ev)
+    this.playing = false
+    this.loginError = 'Connection lost. Please try logging in again.'
   }
 }
 </script>
