@@ -112,6 +112,7 @@ export default class App extends Vue {
   }
 
   private quitPlay () {
+    // eslint-disable-next-line no-unused-expressions
     this.playClient?.quit()
     this.playing = false
     this.loginError = ''
