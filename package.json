@@ -59,7 +59,8 @@
       "comma-dangle": [
         "error",
         "always-multiline"
-      ]
+      ],
+      "no-unused-expressions": "off"
     }
   },
   "browserslist": [

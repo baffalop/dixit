@@ -132,9 +132,8 @@ class PlayClient {
   private clearEvents () {
     this.onDataCallback = null
     this.onCloseCallback = null
-    if (!this.ws) return
-    this.ws.removeEventListener('close', this.onClose)
-    this.ws.removeEventListener('message', this.onMessage)
+    this.ws?.removeEventListener('close', this.onClose)
+    this.ws?.removeEventListener('message', this.onMessage)
   }
 
   private buildUrl (): string {
