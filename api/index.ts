@@ -47,13 +47,14 @@ app.ws('/play', (ws) => {
     try {
       data = JSON.parse(msg.toString())
     } catch (err) {
-      console.log('Data not parsable as JSON')
+      console.log('Data not parsable as JSON. Closing socket.')
+      ws.close(1007, 'Could not parse JSON')
       return
     }
 
     if (!data.hasOwnProperty('name')) {
       console.log('Received first message without name. Closing socket.')
-      ws.close(403, 'First message must contain name')
+      ws.close(1008, 'First message must contain name')
       return
     }
 
@@ -61,12 +62,18 @@ app.ws('/play', (ws) => {
     const player = game.getPlayer(name)
     if (!player) {
       console.log(`Closing socket: no player found with name '${name}'`)
-      ws.close(403, 'Player name not found. Please login first.')
+      ws.close(4003, 'Player name not found. Please login first.')
       return
     }
 
     console.log(`Socket successfully matched with player '${name}'`)
     player.setSocket(ws)
+
+    ws.send(JSON.stringify({
+      name: name,
+      hand: player.getHand(),
+      players: game.getPlayers(player),
+    }))
   })
 })
 
