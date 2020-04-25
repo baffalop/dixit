@@ -2,12 +2,15 @@
   <div id="app">
     <img class="logo" alt="Dixit logo" src="./assets/logo-dixit.png">
     <div class="main">
+
       <div v-if="playing">
         <h1>We're in!</h1>
         <button @click="quitPlay()">Quit</button>
       </div>
+
       <Loader v-else-if="loading" />
       <WelcomeScreen v-else :initialName="name" :message="loginError" @submit="onSubmit" />
+
     </div>
   </div>
 </template>
