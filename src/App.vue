@@ -139,6 +139,23 @@ export default class App extends Vue {
     background: #1f1923;
     font-size: 16pt;
   }
+
+  input[type=submit], button {
+    background: #e9c98e;
+    color: #46363f;
+    border: none;
+    margin: 15px;
+    font-family: 'Noto Serif', serif;
+    font-weight: bold;
+    font-size: 1.2em;
+    box-shadow: inset 0 0 20px #46363f;
+    transition: box-shadow ease-out 0.2s;
+  }
+
+  input[type=submit]:hover, button:hover {
+    box-shadow: inset 0 0 25px #241c20;
+    cursor: pointer;
+  }
 </style>
 
 <style scoped>

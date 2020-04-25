@@ -30,23 +30,6 @@ export default class HelloWorld extends Vue {
 </script>
 
 <style scoped>
-  input[type=submit] {
-    background: #e9c98e;
-    color: #46363f;
-    border: none;
-    margin: 15px;
-    font-family: 'Noto Serif', serif;
-    font-weight: bold;
-    font-size: 1.2em;
-    box-shadow: inset 0 0 20px #46363f;
-    transition: box-shadow ease-out 0.2s;
-  }
-
-  input[type=submit]:hover {
-    box-shadow: inset 0 0 25px #241c20;
-    cursor: pointer;
-  }
-
   form {
     display: flex;
     flex-direction: column;
