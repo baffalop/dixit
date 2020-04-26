@@ -1,4 +1,5 @@
 import Player from './player'
+import { GameData } from './GameData'
 
 const CARD_COUNT = 100
 const HAND_SIZE = 6
@@ -6,6 +7,7 @@ const DIGITS_IN_CARD_ID = 5
 
 export default class Game {
   private players: Player[] = []
+  private turn: number | null = null
   private deck: string[] = []
 
   constructor () {
@@ -32,6 +34,28 @@ export default class Game {
     return this.players.some(player => player.getName() == name)
   }
 
+  public broadcast (from: Player | 'all') {
+    const data = this.getGameData()
+
+    for (const player of this.players) {
+      if (player !== from) {
+        player.send(data)
+      }
+    }
+  }
+
+  public sendGameData (to: Player) {
+    this.players.find(player => player === to)
+      ?.send(this.getGameData())
+  }
+
+  public getGameData (): GameData {
+    return {
+      players: this.players.map(player => player.getData()),
+      turn: this.turn,
+    }
+  }
+
   private dealIn (player: Player) {
     for (let i = 0; i < HAND_SIZE; i++) {
       const card = this.deck.pop()
@@ -53,5 +77,19 @@ export default class Game {
 
   private static intToCard (i: number) {
     return (i + 1).toString().padStart(DIGITS_IN_CARD_ID, '0')
+  }
+
+  playerExit (player: Player) {
+    const playerIndex = this.players.findIndex(p => p === player)
+    if (playerIndex == -1) {
+      console.log(`Could not find player to remove: ${player.getName()}`)
+      return
+    }
+
+    this.players.splice(playerIndex, 1)
+    if (this.turn !== null && this.turn >= playerIndex) this.turn--
+    console.log(`Player removed: ${player.getName()}`)
+
+    this.broadcast('all')
   }
 }

@@ -3,13 +3,9 @@
     <img class="logo" alt="Dixit logo" src="./assets/logo-dixit.png">
     <div class="main">
 
-      <div v-if="playing">
-        <h1>We're in!</h1>
-        <button @click="quitPlay()">Quit</button>
-      </div>
-
-      <Loader v-else-if="loading" />
-      <WelcomeScreen v-else :initialName="name" :message="loginError" @submit="onSubmit" />
+      <WelcomeScreen v-if="playState === 'login'" :initialName="name" :message="loginError" @submit="onSubmit" />
+      <Loader v-else-if="playState === 'loading'" />
+      <Game v-else :gameData="playState" :client="playClient" @quit="quitPlay()" />
 
     </div>
   </div>
@@ -19,27 +15,29 @@
 import { Component, Vue } from 'vue-property-decorator'
 import WelcomeScreen from './components/WelcomeScreen.vue'
 import Loader from '@/components/Loader.vue'
+import Game from '@/components/Game.vue'
 import axios from 'axios'
 import { PlayClient, ConnectError } from '@/util/PlayClient'
+import { GameData } from '@/util/GameData'
 
 const LOGIN_ENDPOINT = '/login'
 
+type PlayState = 'login' | 'loading' | GameData
 class LoginError extends Error {}
 
 @Component({
   components: {
     WelcomeScreen,
     Loader,
+    Game,
   },
 })
 
 export default class App extends Vue {
   private name = ''
-  private hand: string[] = []
+  private playState: PlayState = 'login'
 
   private loginError = ''
-  private loading = false
-  private playing = false
 
   private playClient: PlayClient | null = null
 
@@ -47,18 +45,15 @@ export default class App extends Vue {
     console.log(`Submitting name: ${name}`)
 
     this.name = name
-    this.loading = true
+    this.playState = 'loading'
 
     try {
-      const { hand }: { name: string; hand: string[] } = await this.login()
-      this.hand = hand
-      await this.connect()
+      await this.login()
+      const gameData = await this.connect()
       console.log('Connected')
-
-      this.loading = false
-      this.playing = true
+      this.playState = gameData
     } catch (e) {
-      this.loading = false
+      this.playState = 'login'
       this.loginError = e.message
     }
   }
@@ -105,10 +100,17 @@ export default class App extends Vue {
   /**
    * @throws ConnectError
    */
-  private async connect () {
+  private async connect (): Promise<GameData> {
     this.playClient = new PlayClient(this.name)
     try {
-      await this.playClient.login(this.onMessage, this.onSocketClosed)
+      const data = await this.playClient.login(this.onMessage, this.onSocketClosed)
+
+      if (typeof data === 'string') {
+        this.playClient.quit()
+        throw new LoginError(data)
+      }
+
+      return data
     } catch (e) {
       throw new LoginError(e.message + ' Please try again.')
     }
@@ -116,19 +118,23 @@ export default class App extends Vue {
 
   private quitPlay () {
     this.playClient?.quit()
-    this.playing = false
+    this.playState = 'login'
     this.loginError = ''
   }
 
-  private onMessage (data: object | string) {
-    console.log('Message received')
-    console.log(data)
+  private onMessage (data: GameData | string) {
+    if (typeof data === 'string') {
+      console.log(`Message: ${data}`)
+      return
+    }
+
+    this.playState = data
   }
 
   private onSocketClosed (ev: CloseEvent) {
     console.log('Socket closed')
     console.log(ev)
-    this.playing = false
+    this.playState = 'login'
     this.loginError = 'Connection lost. Please try logging in again.'
   }
 }

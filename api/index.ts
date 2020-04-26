@@ -3,6 +3,7 @@ import http from 'http'
 import Game from './model/Game'
 import Player from './model/Player'
 import expressWs from 'express-ws'
+import {CloseEvent} from 'ws'
 
 const game = new Game()
 
@@ -40,7 +41,7 @@ app.post('/login', (req, res) => {
 app.ws('/play', (ws) => {
   console.log('New /play websocket. Listening for login.')
 
-  ws.on('message', (msg: string) => {
+  const onLogin = (msg: string) => {
     console.log(`Received websocket message: ${msg}`)
 
     let data
@@ -67,14 +68,18 @@ app.ws('/play', (ws) => {
     }
 
     console.log(`Socket successfully matched with player '${name}'`)
-    player.setSocket(ws)
 
-    ws.send(JSON.stringify({
-      name: name,
-      hand: player.getHand(),
-      players: game.getPlayers(player),
-    }))
-  })
+    ws.removeEventListener('message', onLogin)
+    ws.addEventListener('close', (ev: CloseEvent) => {
+      console.log(`Connection closed for ${player.getName()} (${ev.code} ${ev.reason})`)
+      game.playerExit(player)
+    })
+
+    player.setSocket(ws)
+    game.broadcast('all')
+  }
+
+  ws.on('message', onLogin)
 })
 
 server.listen(3000, () => {

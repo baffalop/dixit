@@ -1,3 +1,5 @@
+import { GameData, isGameData } from '@/util/GameData'
+
 const PLAY_ENDPOINT = 'play'
 
 class ConnectError extends Error {}
@@ -5,7 +7,7 @@ class ConnectError extends Error {}
 class PlayClient {
   readonly name: string
 
-  private onDataCallback: ((data: object | string) => void) | null = null
+  private onDataCallback: ((data: GameData | string) => void) | null = null
   private onCloseCallback: ((ev: CloseEvent) => void) | null = null
 
   private ws: WebSocket | null = null
@@ -36,11 +38,11 @@ class PlayClient {
    *
    * @throws ConnectError If the connection is closed before login is complete
    */
-  public login (onData: (data: object | string) => void, onClose: (ev: CloseEvent) => void): Promise<void> {
+  public login (onData: (data: GameData | string) => void, onClose: (ev: CloseEvent) => void): Promise<GameData | string> {
     this.onDataCallback = onData
     this.onCloseCallback = onClose
 
-    return new Promise((resolve: () => void, reject: (e: ConnectError) => void) => {
+    return new Promise((resolve: (data: GameData | string) => void, reject: (e: ConnectError) => void) => {
       try {
         this.ws = new WebSocket(this.buildUrl())
       } catch (e) {
@@ -72,7 +74,7 @@ class PlayClient {
           this.ws!.addEventListener('close', this.onClose.bind(this))
 
           this.connected = true
-          resolve()
+          resolve(this.decodeData(ev.data))
         }
 
         this.ws!.addEventListener('message', onLoginAck)
@@ -120,9 +122,14 @@ class PlayClient {
     this.clearEvents()
   }
 
-  private decodeData (data: string): object | string {
+  private decodeData (data: string): GameData | string {
     try {
-      return JSON.parse(data)
+      const dataObject = JSON.parse(data)
+      if (isGameData(dataObject)) {
+        return dataObject
+      }
+      console.log('Data is not instance of GameData. Returning as string.')
+      return data
     } catch (e) {
       console.log('Data is not JSON. Returning as string.')
       return data
