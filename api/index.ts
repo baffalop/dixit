@@ -1,7 +1,7 @@
 import express from 'express'
 import http from 'http'
-import Game from './model/game'
-import Player from './model/player'
+import Game from './model/Game'
+import Player from './model/Player'
 import expressWs from 'express-ws'
 
 const game = new Game()
