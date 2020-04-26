@@ -34,9 +34,8 @@ export default class Game {
     return this.players.some(player => player.getName() == name)
   }
 
-  public broadcast (from: Player | 'all') {
+  public broadcast (from: Player | null = null) {
     const data = this.getGameData()
-
     for (const player of this.players) {
       if (player !== from) {
         player.send(data)
@@ -90,6 +89,6 @@ export default class Game {
     if (this.turn !== null && this.turn >= playerIndex) this.turn--
     console.log(`Player removed: ${player.getName()}`)
 
-    this.broadcast('all')
+    this.broadcast()
   }
 }

@@ -76,7 +76,7 @@ app.ws('/play', (ws) => {
     })
 
     player.setSocket(ws)
-    game.broadcast('all')
+    game.broadcast()
   }
 
   ws.on('message', onLogin)
