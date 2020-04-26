@@ -30,11 +30,7 @@ app.post('/login', (req, res) => {
   game.addPlayer(player)
 
   console.log('Player added to game')
-  res.status(200).send({
-    name: name,
-    hand: player.getHand(),
-    players: game.getPlayers(player),
-  })
+  res.status(200).send('ok')
 })
 
 // @ts-ignore ws method injected by express-ws

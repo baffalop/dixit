@@ -61,17 +61,12 @@ export default class App extends Vue {
   /**
    * @throws LoginError
    */
-  private async login (): Promise<{ name: string; hand: string[] }> {
+  private async login (): Promise<object | string> {
     try {
       const { data: response } = await axios.post(LOGIN_ENDPOINT, { name: this.name })
 
       console.log('We\'re in!')
       console.log(response)
-
-      if (!response.hand) {
-        console.log('Error: Login did not return hand')
-        throw new LoginError('Got an unexpected response. Please try again.')
-      }
 
       return response
     } catch (e) {
