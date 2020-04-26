@@ -5,7 +5,7 @@
 
       <WelcomeScreen v-if="playState === 'login'" :initialName="name" :message="loginError" @submit="onSubmit" />
       <Loader v-else-if="playState === 'loading'" />
-      <Game v-else :gameData="playState" :client="playClient" @quit="quitPlay()" />
+      <Game v-else :name="name" :gameData="playState" :client="playClient" @quit="quitPlay()" />
 
     </div>
   </div>

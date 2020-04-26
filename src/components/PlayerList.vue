@@ -1,7 +1,7 @@
 <template>
   <div class="dialogue">
     <ul>
-      <li v-for="(player, i) in players" :key="player.name" :class="{ turn: i === turn }">
+      <li v-for="(player) in players" :key="player.name" :class="{ turn: player.turn }">
         {{ player.name }} ({{ player.score }})
       </li>
     </ul>
@@ -15,7 +15,6 @@ import { Player } from '@/util/GameData'
 @Component
 export default class PlayerList extends Vue {
   @Prop({ type: Array, required: true }) players!: Player[]
-  @Prop({ type: Number, required: true }) turn!: number | null
   @Prop({ type: String, required: true }) me!: string
 }
 </script>

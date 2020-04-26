@@ -14,9 +14,27 @@ export default class Game {
     this.shuffleDeck()
   }
 
-  public addPlayer (player: Player) {
+  public addPlayer (name: string): Player {
+    const player = new Player(name, this)
     this.dealIn(player)
     this.players.push(player)
+    return player
+  }
+
+  public takeTurn (player: Player) {
+    const playerIndex = this.players.indexOf(player)
+    if (playerIndex == -1) {
+      console.log(`I don't have a '${player.getName()}`)
+      return
+    }
+
+    if (this.turn === null) {
+      this.setTurn(playerIndex)
+    }
+
+    player.giveScore(2)
+    this.passTurn()
+    this.broadcast()
   }
 
   public getPlayer (name: string) {
@@ -55,6 +73,10 @@ export default class Game {
     }
   }
 
+  public getTurn (): number | null {
+    return this.turn
+  }
+
   private dealIn (player: Player) {
     for (let i = 0; i < HAND_SIZE; i++) {
       const card = this.deck.pop()
@@ -63,6 +85,26 @@ export default class Game {
       }
       player.deal(card)
     }
+  }
+
+  private setTurn (index: number) {
+    if (index >= this.players.length || index < 0) {
+      throw new Error(`Turn index ${index} out of bounds (${this.players.length} players)`)
+    }
+
+    if (this.turn !== null && this.turn !== index) {
+      this.players[this.turn].setIsTurn(false)
+    }
+
+    this.players[index].setIsTurn(true)
+    this.turn = index
+  }
+
+  private passTurn () {
+    if (this.turn === null) {
+      return
+    }
+    this.setTurn((this.turn + 1) % this.players.length)
   }
 
   private shuffleDeck () {

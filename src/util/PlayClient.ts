@@ -91,14 +91,22 @@ class PlayClient {
     this.ws.close(4001, 'Quitting')
   }
 
+  public takeTurn () {
+    this.send({ action: 'play' })
+  }
+
   /**
    * @param data
    *
    * @throws Error
    */
-  private send (data: Record<string, any>|string) {
+  private send (data: object | string) {
     if (this.ws === null) {
       throw new Error('WebSocket not initialised')
+    }
+
+    if (this.ws.readyState !== WebSocket.OPEN) {
+      throw new Error('WebSocket is not open')
     }
 
     if (typeof data === 'string') {

@@ -1,6 +1,7 @@
 interface PlayerData {
   name: string
   score: number
+  turn: boolean
 }
 
 interface GameData {
@@ -8,4 +9,8 @@ interface GameData {
   turn: number | null
 }
 
-export { PlayerData, GameData }
+type Action = {
+  action: 'play'
+}
+
+export { PlayerData, GameData, Action }

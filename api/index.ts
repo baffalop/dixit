@@ -26,8 +26,7 @@ app.post('/login', (req, res) => {
     return
   }
 
-  const player = new Player(name)
-  game.addPlayer(player)
+  const player = game.addPlayer(name)
 
   console.log('Player added to game')
   res.status(200).send('ok')
