@@ -2,7 +2,7 @@ import WebSocket from 'ws'
 import { PlayerData, GameData } from './GameData'
 
 export default class Player {
-  private name: string
+  readonly name: string
   private score: number = 0
   private hand: string[] = []
 
