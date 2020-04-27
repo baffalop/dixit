@@ -1,6 +1,6 @@
 # Dixit
 
-A realtime online version of the Dixit boardgame. Made using WebSockets, Node (TypeScript, Express), and Vue (TypeScript).
+A realtime online version of the Dixit boardgame. Made using WebSockets, Typescript, Node and Vue.
 
 ### Project setup
 ```
