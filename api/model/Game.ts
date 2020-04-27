@@ -52,6 +52,20 @@ export default class Game {
     return this.players.some(player => player.getName() == name)
   }
 
+  public playerExit (player: Player) {
+    const playerIndex = this.players.findIndex(p => p === player)
+    if (playerIndex == -1) {
+      console.log(`Could not find player to remove: ${player.getName()}`)
+      return
+    }
+
+    this.players.splice(playerIndex, 1)
+    if (this.turn !== null && this.turn >= playerIndex) this.turn--
+    console.log(`Player removed: ${player.getName()}`)
+
+    this.broadcast()
+  }
+
   public broadcast (from: Player | null = null) {
     const data = this.getGameData()
     for (const player of this.players) {
@@ -77,16 +91,6 @@ export default class Game {
     return this.turn
   }
 
-  private dealIn (player: Player) {
-    for (let i = 0; i < HAND_SIZE; i++) {
-      const card = this.deck.pop()
-      if (card === undefined) {
-        throw new Error('Out of cards!')
-      }
-      player.deal(card)
-    }
-  }
-
   private setTurn (index: number) {
     if (index >= this.players.length || index < 0) {
       throw new Error(`Turn index ${index} out of bounds (${this.players.length} players)`)
@@ -98,6 +102,16 @@ export default class Game {
 
     this.players[index].setIsTurn(true)
     this.turn = index
+  }
+
+  private dealIn (player: Player) {
+    for (let i = 0; i < HAND_SIZE; i++) {
+      const card = this.deck.pop()
+      if (card === undefined) {
+        throw new Error('Out of cards!')
+      }
+      player.deal(card)
+    }
   }
 
   private passTurn () {
@@ -118,19 +132,5 @@ export default class Game {
 
   private static intToCard (i: number) {
     return (i + 1).toString().padStart(DIGITS_IN_CARD_ID, '0')
-  }
-
-  playerExit (player: Player) {
-    const playerIndex = this.players.findIndex(p => p === player)
-    if (playerIndex == -1) {
-      console.log(`Could not find player to remove: ${player.getName()}`)
-      return
-    }
-
-    this.players.splice(playerIndex, 1)
-    if (this.turn !== null && this.turn >= playerIndex) this.turn--
-    console.log(`Player removed: ${player.getName()}`)
-
-    this.broadcast()
   }
 }

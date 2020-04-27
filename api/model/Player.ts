@@ -1,5 +1,5 @@
-import WebSocket, {MessageEvent} from 'ws'
-import {PlayerData, GameData, Action} from './GameData'
+import WebSocket, { MessageEvent } from 'ws'
+import { PlayerData, GameData, Action } from './GameData'
 import Game from './Game'
 
 export default class Player {
@@ -29,14 +29,6 @@ export default class Player {
     this.score += score
   }
 
-  public getData (): PlayerData {
-    return {
-      name: this.name,
-      score: this.score,
-      turn: this.isTurn,
-    }
-  }
-
   public send (gameData: GameData) {
     if (!this.ws) {
       console.log(`Attempted to send data to '${this.name}' but socket is not initialised`)
@@ -60,8 +52,12 @@ export default class Player {
     this.ws.send(JSON.stringify(data))
   }
 
-  public getHand () : string[] {
-    return this.hand
+  public getData (): PlayerData {
+    return {
+      name: this.name,
+      score: this.score,
+      turn: this.isTurn,
+    }
   }
 
   public setSocket (ws: WebSocket) {
@@ -71,6 +67,10 @@ export default class Player {
 
   public setIsTurn (isTurn: boolean) {
     this.isTurn = isTurn
+  }
+
+  public getHand (): string[] {
+    return this.hand
   }
 
   private onMessage (ev: MessageEvent) {
