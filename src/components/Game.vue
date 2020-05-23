@@ -1,6 +1,7 @@
 <template>
   <div>
     <PlayerList :players="gameData.players" :me="name" />
+    <Hand :cards="gameData.hand" />
     <span>
       <button @click="$emit('quit')">QUIT</button>
       <button v-if="gameData.myTurn || gameData.turn === null" @click="takeTurn()">PLAY</button>
@@ -11,12 +12,14 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import PlayerList from '@/components/PlayerList.vue'
+import Hand from '@/components/Hand.vue'
 import { GameData } from '@/util/GameData'
 import { PlayClient } from '@/util/PlayClient'
 
 @Component({
   components: {
     PlayerList,
+    Hand,
   },
 })
 
