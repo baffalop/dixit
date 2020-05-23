@@ -61,8 +61,9 @@ export default class Hand extends Vue {
 
 <style scoped>
   .hand {
+    margin: 20px;
     width: 1200px;
-    height: 700px;
+    height: 170px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -70,7 +71,7 @@ export default class Hand extends Vue {
   }
 
   .hand .card {
-    width: 100px;
+    height: 150px;
     margin: 10px;
     transition: all 0.4s;
   }
@@ -80,15 +81,15 @@ export default class Hand extends Vue {
   }
 
   .hand .card.selectable:hover {
-    width: 450px;
-    margin: -25px;
+    height: 600px;
+    margin: -45px;
     justify-self: normal;
     z-index: 1000;
   }
 
   .hand .card.selected {
-    width: 450px;
-    margin: 25px;
+    height: 600px;
+    margin: -60px 25px;
     justify-self: normal;
     z-index: 1000;
   }

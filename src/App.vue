@@ -160,6 +160,14 @@ export default class App extends Vue {
     box-shadow: inset 0 0 25px #241c20;
     cursor: pointer;
   }
+
+  .dialogue {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #462b36;
+    box-shadow: 5px 5px 15px 0 #0e0a1073;
+    min-width: 200px;
+  }
 </style>
 
 <style scoped>
@@ -173,18 +181,15 @@ export default class App extends Vue {
     margin-top: 60px;
   }
 
+  .main {
+    display: flex;
+    justify-content: center;
+  }
+
   .logo {
     height: 25vh;
     max-height: 220px;
     transform: translateX(-3%);
     margin-bottom: 40px;
-  }
-
-  .dialogue {
-    display: inline-block;
-    padding: 10px 15px;
-    background: #462b36;
-    box-shadow: 5px 5px 15px 0 #0e0a1073;
-    min-width: 200px;
   }
 </style>
