@@ -4,8 +4,9 @@
       v-for="card in cards"
       :key="card"
       :src="cardSrc(card)"
+      class="card"
       :class="{ selectable: cardsAreSelectable, selected: cardIsSelected(card) }"
-      @click="selectCard(card)"
+      @click="onCardClick(card)"
       v-on-clickaway="() => onClickaway(card)"
     />
   </div>
@@ -27,11 +28,16 @@ export default class Hand extends Vue {
     return this.selected === null
   }
 
-  private selectCard (card: string) {
+  private onCardClick (card: string) {
     if (!this.cardsAreSelectable) {
+      this.deselect()
       return
     }
 
+    this.selectCard(card)
+  }
+
+  private selectCard (card: string) {
     this.selected = card
   }
 
@@ -63,21 +69,24 @@ export default class Hand extends Vue {
     align-items: flex-end;
   }
 
-  .hand img {
+  .hand .card {
     width: 100px;
     margin: 10px;
     transition: all 0.4s;
   }
 
-  .hand img.selectable:hover {
+  .hand .card:hover {
     cursor: pointer;
+  }
+
+  .hand .card.selectable:hover {
     width: 450px;
     margin: -25px;
     justify-self: normal;
     z-index: 1000;
   }
 
-  .hand img.selected {
+  .hand .card.selected {
     width: 450px;
     margin: 25px;
     justify-self: normal;
