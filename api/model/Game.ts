@@ -9,7 +9,7 @@ const DIGITS_IN_CARD_ID = 5
 export default class Game {
   private players: Player[] = []
   private turn: number | null = null
-  private deck: Deck<string> = new Deck()
+  private deck = new Deck<string>()
 
   constructor () {
     this.generateDeck()
