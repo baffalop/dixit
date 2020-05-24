@@ -1,16 +1,14 @@
-interface PlayerData {
+export interface PlayerData {
   name: string
   score: number
   turn: boolean
 }
 
-interface GameData {
+export interface GameData {
   players: PlayerData[]
   turn: number | null
 }
 
-type Action = {
+export type Action = {
   action: 'play'
 }
-
-export { PlayerData, GameData, Action }
