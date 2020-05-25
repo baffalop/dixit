@@ -1,6 +1,7 @@
 import Player from './player'
 import { GameData } from './GameData'
 import Deck from '../Deck'
+import Round from './Round'
 
 const CARD_COUNT = 100
 const HAND_SIZE = 6
@@ -10,6 +11,7 @@ export default class Game {
   private players: Player[] = []
   private turn: number | null = null
   private deck = new Deck<string>()
+  private round: Round | null = null
 
   constructor () {
     this.generateDeck()
