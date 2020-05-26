@@ -1,5 +1,5 @@
 import Player from './player'
-import { GameData } from './GameData'
+import { GameData, Stage } from './GameData'
 import Deck from '../Deck'
 import Round from './Round'
 
@@ -87,11 +87,28 @@ export default class Game {
     return {
       players: this.players.map(player => player.getData()),
       turn: this.turn,
+      stage: this.getStage(),
     }
   }
 
   public getTurn (): number | null {
     return this.turn
+  }
+
+  private getStage (): Stage {
+    if (!this.round) {
+      return Stage.AwaitingClue
+    }
+
+    if (this.round.countCards() < this.players.length) {
+      return Stage.CollectingCards
+    }
+
+    if (this.round.countGuesses() < this.players.length - 1) {
+      return Stage.Guessing
+    }
+
+    return Stage.Scoring
   }
 
   private setTurn (index: number) {
