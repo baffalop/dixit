@@ -73,6 +73,8 @@ export default class Hand extends Vue {
   .hand .card {
     height: 150px;
     margin: 10px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px 0 #0e0a1073;
     transition: all 0.4s;
   }
 
@@ -83,6 +85,7 @@ export default class Hand extends Vue {
   .hand .card.selectable:hover {
     height: 600px;
     margin: -45px;
+    border-radius: 20px;
     justify-self: normal;
     z-index: 1000;
   }
@@ -90,6 +93,7 @@ export default class Hand extends Vue {
   .hand .card.selected {
     height: 600px;
     margin: -60px 25px;
+    border-radius: 20px;
     justify-self: normal;
     z-index: 1000;
   }
