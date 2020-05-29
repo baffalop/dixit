@@ -16,8 +16,9 @@
       "error",
       "always-multiline"
     ],
+    "eqeqeq": "off",
     "no-unused-expressions": "off",
-    "member-delimiter-style": ["warn", {
+    "@typescript-eslint/member-delimiter-style": ["error", {
       "multiline": {
         "delimiter": "none"
       },
@@ -25,7 +26,6 @@
         "delimiter": "comma",
         "requireLast": false
       }
-    }],
-    "eqeqeq": "off"
+    }]
   }
 }
