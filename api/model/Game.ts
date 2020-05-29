@@ -1,7 +1,16 @@
 import Player from './player'
-import { GameData, Stage } from './GameData'
+import {
+  Action,
+  ActionToStage,
+  GameData,
+  Guess,
+  MakeClue,
+  PlayCard,
+  Stage,
+} from './GameData'
 import Deck from '../Deck'
 import Round from './Round'
+import PlayedCard from './PlayedCard'
 
 const CARD_COUNT = 100
 const HAND_SIZE = 6
@@ -24,20 +33,89 @@ export default class Game {
     return player
   }
 
-  public takeTurn (player: Player) {
-    const playerIndex = this.players.indexOf(player)
-    if (playerIndex == -1) {
-      console.log(`I don't have a '${player.getName()}`)
+  public takeAction (player: Player, action: Action) {
+    const stage = this.getStage()
+    if (stage != ActionToStage[action.action]) {
+      console.log(`${player} attempted ${action.action} but stage is ${stage}`)
+      player.sendError(`Your action is out of sequence. Currently ${stage}`)
+      return
+    }
+
+    switch (action.action) {
+      case 'clue':
+        this.makeClue(player, action)
+        break
+      case 'play':
+        this.playCard(player, action)
+        break
+      case 'guess':
+        this.guess(player, action)
+        break
+    }
+  }
+
+  private makeClue (player: Player, action: MakeClue) {
+    try {
+      const playedCard = this.collectCard(player, action.card)
+      this.round = new Round(playedCard, action.clue)
+    } catch {
       return
     }
 
     if (this.turn === null) {
-      this.setTurn(playerIndex)
+      this.turn = this.players.indexOf(player)
+    }
+    this.allPlayersCanPlay()
+
+    this.broadcast()
+  }
+
+  private playCard (player: Player, action: PlayCard) {
+    try {
+      const playedCard = this.collectCard(player, action.card)
+      this.round!.addCard(playedCard)
+    } catch {
+      return
     }
 
-    player.giveScore(2)
-    this.passTurn()
+    if (this.getStage() == Stage.Guessing) {
+      this.allPlayersCanPlay()
+    } else {
+      player.setCanPlay(false)
+    }
+
     this.broadcast()
+  }
+
+  private guess (player: Player, action: Guess) {
+    try {
+      this.round!.guess(player, action.card)
+    } catch {
+      console.log(`${player} guessed card ${action.card} but it wasn't found in Round`)
+      player.sendError('The card you guessed is invalid')
+      return
+    }
+
+    player.setCanPlay(false)
+
+    if (this.getStage() == Stage.Scoring) {
+      this.round!.score()
+      this.broadcast()
+      setTimeout(() => this.passTurn(), 10000)
+    }
+  }
+
+  private collectCard (player: Player, card: string): PlayedCard {
+    try {
+      player.takeCardFromHand(card)
+    } catch (e) {
+      console.log(`${player} tried to play card ${card} but doesn't have it in hand`)
+      player.sendError("You can't play this card: it's not in your hand")
+      throw e
+    }
+
+    this.deal(player)
+    return new PlayedCard(card, player)
   }
 
   public getPlayer (name: string) {
@@ -56,7 +134,7 @@ export default class Game {
   }
 
   public playerExit (player: Player) {
-    const playerIndex = this.players.findIndex(p => p === player)
+    const playerIndex = this.players.indexOf(player)
     if (playerIndex == -1) {
       console.log(`Could not find player to remove: ${player.getName()}`)
       return
@@ -116,22 +194,22 @@ export default class Game {
       throw new Error(`Turn index ${index} out of bounds (${this.players.length} players)`)
     }
 
-    if (this.turn !== null && this.turn !== index) {
-      this.players[this.turn].setIsTurn(false)
-    }
-
-    this.players[index].setIsTurn(true)
+    this.players[index].setCanPlay(true)
     this.turn = index
   }
 
   private dealIn (player: Player) {
     for (let i = 0; i < HAND_SIZE; i++) {
-      try {
-        const card = this.deck.pop()
-        player.deal(card)
-      } catch (e) {
-        throw new Error('Out of cards!')
-      }
+      this.deal(player)
+    }
+  }
+
+  private deal (player: Player) {
+    try {
+      const card = this.deck.pop()
+      player.deal(card)
+    } catch (e) {
+      throw new Error('Out of cards!')
     }
   }
 
@@ -139,7 +217,13 @@ export default class Game {
     if (this.turn === null) {
       return
     }
+    this.round = null
     this.setTurn((this.turn + 1) % this.players.length)
+  }
+
+  private allPlayersCanPlay () {
+    const playerWhoseTurnItIs = this.turn === null ? null : this.players[this.turn]
+    this.players.forEach(player => player !== playerWhoseTurnItIs && player.setCanPlay(true))
   }
 
   private generateDeck () {

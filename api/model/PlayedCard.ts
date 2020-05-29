@@ -22,6 +22,10 @@ export default class PlayedCard {
     this.guesses.add(player)
   }
 
+  public allGuesses (): Player[] {
+    return Array.from(this.guesses)
+  }
+
   public countGuesses (): number {
     return this.guesses.size
   }

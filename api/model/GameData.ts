@@ -5,10 +5,10 @@ export interface PlayerData {
 }
 
 export enum Stage {
-  AwaitingClue = 'AwaitingClue',
-  CollectingCards = 'CollectingCards',
-  Guessing = 'Guessing',
-  Scoring = 'Scoring',
+  AwaitingClue = 'awaiting clue',
+  CollectingCards = 'collecting cards',
+  Guessing = 'guessing',
+  Scoring = 'scoring',
 }
 
 export interface GameData {
@@ -17,20 +17,48 @@ export interface GameData {
   stage: Stage
 }
 
+enum ActionName {
+  Clue = 'clue',
+  Play = 'play',
+  Guess = 'guess',
+}
+
 export interface MakeClue {
-  action: 'clue'
+  action: ActionName.Clue
   clue: string
   card: string
 }
 
 export interface PlayCard {
-  action: 'play'
+  action: ActionName.Play
   card: string
 }
 
 export interface Guess {
-  action: 'guess'
+  action: ActionName.Guess
   card: string
 }
 
 export type Action = MakeClue | PlayCard | Guess
+
+export function isAction (data: unknown): data is Action {
+  if (typeof data != 'object' || data === null)
+    return false
+
+  switch ((data as { action: string }).action) {
+    case ActionName.Clue:
+      const { clue, card } = (data as MakeClue)
+      return typeof clue == 'string' && typeof card == 'string'
+    case ActionName.Play:
+    case ActionName.Guess:
+      return typeof (data as Action).card == 'string'
+    default:
+      return false
+  }
+}
+
+export const ActionToStage = {
+  [ActionName.Clue]: Stage.AwaitingClue,
+  [ActionName.Play]: Stage.CollectingCards,
+  [ActionName.Guess]: Stage.Guessing,
+}

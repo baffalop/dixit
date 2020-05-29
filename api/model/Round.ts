@@ -27,6 +27,25 @@ export default class Round {
     existingCard.guess(player)
   }
 
+  public score () {
+    const playerCount = this.cards.length()
+    const playingPlayerWon = this.playedCard.countGuesses() != 0 && this.playedCard.countGuesses() != playerCount - 1
+    if (playingPlayerWon)
+      this.playedCard.getPlayedBy().giveScore(3)
+
+    for (const player of this.playedCard.allGuesses()) {
+      player.giveScore(3)
+    }
+
+    for (const card of this.cards.all()) {
+      if (card === this.playedCard) {
+        continue
+      }
+
+      card.getPlayedBy().giveScore(card.countGuesses() + (playingPlayerWon ? 0 : 2))
+    }
+  }
+
   public countCards (): number {
     return this.cards.length()
   }
