@@ -1,0 +1,31 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "plugin:vue/essential",
+    "@vue/standard",
+    "@vue/typescript/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "rules": {
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "no-unused-expressions": "off",
+    "member-delimiter-style": ["warn", {
+      "multiline": {
+        "delimiter": "none"
+      },
+      "singleline": {
+        "delimiter": "comma",
+        "requireLast": false
+      }
+    }],
+    "eqeqeq": "off"
+  }
+}

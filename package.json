@@ -43,37 +43,6 @@
     "typescript": "~3.8.3",
     "vue-template-compiler": "^2.6.11"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/standard",
-      "@vue/typescript/recommended"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2020
-    },
-    "rules": {
-      "comma-dangle": [
-        "error",
-        "always-multiline"
-      ],
-      "no-unused-expressions": "off",
-      "member-delimiter-style": ["error", {
-        "multiline": {
-          "delimiter": "none"
-        },
-        "singleline": {
-          "delimiter": "comma",
-          "requireLast": false
-        }
-      }],
-      "eqeqeq": "off"
-    }
-  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
