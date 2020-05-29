@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1 v-if="gameData.clue" class="clue">{{ gameData.clue }}</h1>
     <PlayerList :players="gameData.players" :me="name" />
     <Hand :cards="gameData.hand" />
     <span>
@@ -36,4 +37,9 @@ export default class Game extends Vue {
 </script>
 
 <style scoped>
+  .clue {
+    font-family: 'Trade Winds', serif;
+    font-style: normal;
+    color: #ab8b8e;
+  }
 </style>
