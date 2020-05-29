@@ -26,6 +26,7 @@ export interface GameData {
   turn: number | null
   myTurn: boolean
   stage: Stage
+  clue: string | null
 }
 
 export function isGameData (value: object): value is GameData {
@@ -35,6 +36,7 @@ export function isGameData (value: object): value is GameData {
     turn,
     myTurn,
     stage,
+    clue,
   } = (value as GameData)
 
   return (
@@ -43,6 +45,7 @@ export function isGameData (value: object): value is GameData {
     (typeof turn == 'number' || turn === null) &&
     typeof myTurn == 'boolean' &&
     typeof stage == 'string' &&
+    (typeof turn == 'string' || turn === null) &&
     hand.every(card => typeof card == 'string') &&
     players.every(isPlayer)
   )

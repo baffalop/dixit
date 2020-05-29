@@ -166,6 +166,7 @@ export default class Game {
       players: this.players.map(player => player.getData()),
       turn: this.turn,
       stage: this.getStage(),
+      clue: this.round?.clue || null,
     }
   }
 

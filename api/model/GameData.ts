@@ -15,6 +15,7 @@ export interface GameData {
   players: PlayerData[]
   turn: number | null
   stage: Stage
+  clue: string | null
 }
 
 enum ActionName {
