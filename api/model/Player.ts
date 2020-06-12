@@ -1,5 +1,5 @@
 import WebSocket, { MessageEvent } from 'ws'
-import {PlayerData, GameData, Action, isAction, MakeClue, PlayCard, Guess} from './GameData'
+import { PlayerData, GameData, isAction } from './GameData'
 import Game from './Game'
 
 export default class Player {
