@@ -35,7 +35,7 @@ export default class Game extends Vue {
   @Prop({ type: Object, required: true }) client!: PlayClient
 
   get canPlayFromHand (): boolean {
-    if (!this.gameData.myTurn) {
+    if (!this.gameData.canPlay) {
       return false
     }
 
@@ -50,12 +50,12 @@ export default class Game extends Vue {
 
   private makeClue (data: { card: string, clue: string }) {
     this.client.makeClue(data)
-    this.gameData.myTurn = false
+    this.gameData.canPlay = false
   }
 
   private playCard (data: { card: string }) {
     this.client.playCard(data)
-    this.gameData.myTurn = false
+    this.gameData.canPlay = false
   }
 }
 </script>

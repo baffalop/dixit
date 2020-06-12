@@ -48,7 +48,7 @@ export default class Player {
       const gameData = {
         ...data,
         hand: this.hand,
-        myTurn: this.canPlay,
+        canPlay: this.canPlay,
       }
 
       console.log(`Sending data to '${this.name}'`)
@@ -68,7 +68,7 @@ export default class Player {
     return {
       name: this.name,
       score: this.score,
-      turn: this.canPlay,
+      canPlay: this.canPlay,
     }
   }
 

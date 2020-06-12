@@ -1,15 +1,15 @@
 export interface Player {
   name: string
   score: number
-  turn: boolean
+  canPlay: boolean
 }
 
-export function isPlayer (value: any): value is Player {
-  const { name, score, turn } = (value as Player)
+export function isPlayer (value: object): value is Player {
+  const { name, score, canPlay } = (value as Player)
   return (
     typeof name == 'string' &&
     typeof score == 'number' &&
-    typeof turn == 'boolean'
+    typeof canPlay == 'boolean'
   )
 }
 
@@ -24,7 +24,7 @@ export interface GameData {
   hand: string[]
   players: Player[]
   turn: number | null
-  myTurn: boolean
+  canPlay: boolean
   stage: Stage
   clue: string | null
 }
@@ -34,7 +34,7 @@ export function isGameData (value: object): value is GameData {
     hand,
     players,
     turn,
-    myTurn,
+    canPlay,
     stage,
     clue,
   } = (value as GameData)
@@ -43,7 +43,7 @@ export function isGameData (value: object): value is GameData {
     hand instanceof Array &&
     players instanceof Array &&
     (typeof turn == 'number' || turn === null) &&
-    typeof myTurn == 'boolean' &&
+    typeof canPlay == 'boolean' &&
     typeof stage == 'string' &&
     (typeof clue == 'string' || clue === null) &&
     hand.every(card => typeof card == 'string') &&

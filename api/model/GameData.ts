@@ -1,7 +1,7 @@
 export interface PlayerData {
   name: string
   score: number
-  turn: boolean
+  canPlay: boolean
 }
 
 export enum Stage {

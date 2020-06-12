@@ -1,7 +1,7 @@
 <template>
   <div class="dialogue">
     <ul>
-      <li v-for="(player) in players" :key="player.name" :class="{ turn: player.turn }">
+      <li v-for="(player) in players" :key="player.name" :class="{ turn: player.canPlay }">
         {{ player.name }} ({{ player.score }})
       </li>
     </ul>
