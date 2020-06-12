@@ -91,8 +91,25 @@ class PlayClient {
     this.ws.close(4001, 'Quitting')
   }
 
-  public takeTurn () {
-    this.send({ action: 'play' })
+  public makeClue (data: { card: string, clue: string }) {
+    this.send({
+      action: 'clue',
+      ...data,
+    })
+  }
+
+  public playCard (data: { card: string }) {
+    this.send({
+      action: 'play',
+      ...data,
+    })
+  }
+
+  public guess (data: { card: string }) {
+    this.send({
+      action: 'guess',
+      ...data,
+    })
   }
 
   /**

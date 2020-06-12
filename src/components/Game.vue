@@ -2,10 +2,15 @@
   <div>
     <h1 v-if="gameData.clue" class="clue">{{ gameData.clue }}</h1>
     <PlayerList :players="gameData.players" :me="name" />
-    <Hand :cards="gameData.hand" />
+    <Hand
+      :cards="gameData.hand"
+      :stage="gameData.stage"
+      :can-play="gameData.myTurn"
+      @clue="makeClue"
+      @play="playCard"
+    />
     <span>
       <button @click="$emit('quit')">QUIT</button>
-      <button v-if="gameData.myTurn || gameData.turn === null" @click="takeTurn()">PLAY</button>
     </span>
   </div>
 </template>
@@ -29,8 +34,13 @@ export default class Game extends Vue {
   @Prop({ required: true }) name!: string
   @Prop({ type: Object, required: true }) client!: PlayClient
 
-  private takeTurn () {
-    this.client.takeTurn()
+  private makeClue (data: { card: string, clue: string }) {
+    this.client.makeClue(data)
+    this.gameData.myTurn = false
+  }
+
+  private playCard (data: { card: string }) {
+    this.client.playCard(data)
     this.gameData.myTurn = false
   }
 }

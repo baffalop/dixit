@@ -14,10 +14,10 @@ export function isPlayer (value: any): value is Player {
 }
 
 export enum Stage {
-  AwaitingClue = 'AwaitingClue',
-  CollectingCards = 'CollectingCards',
-  Guessing = 'Guessing',
-  Scoring = 'Scoring',
+  AwaitingClue = 'awaiting clue',
+  CollectingCards = 'collecting cards',
+  Guessing = 'guessing',
+  Scoring = 'scoring',
 }
 
 export interface GameData {
@@ -45,7 +45,7 @@ export function isGameData (value: object): value is GameData {
     (typeof turn == 'number' || turn === null) &&
     typeof myTurn == 'boolean' &&
     typeof stage == 'string' &&
-    (typeof turn == 'string' || turn === null) &&
+    (typeof clue == 'string' || clue === null) &&
     hand.every(card => typeof card == 'string') &&
     players.every(isPlayer)
   )
