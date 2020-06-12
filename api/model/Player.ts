@@ -8,7 +8,7 @@ export default class Player {
 
   private score: number = 0
   private hand: string[] = []
-  private canPlay: boolean = false
+  private canPlay: boolean = true
 
   private ws: WebSocket | null = null
 
