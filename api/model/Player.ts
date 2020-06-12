@@ -90,7 +90,7 @@ export default class Player {
     if (index == -1) {
       throw new Error(`Card ${card} not found in hand`)
     }
-    this.hand.slice(index, 1)
+    this.hand.splice(index, 1)
   }
 
   private onMessage (ev: MessageEvent) {
