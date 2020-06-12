@@ -5,7 +5,7 @@
     <Hand
       :cards="gameData.hand"
       :stage="gameData.stage"
-      :can-play="gameData.myTurn"
+      :can-play="canPlayFromHand"
       @clue="makeClue"
       @play="playCard"
     />
@@ -19,7 +19,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import PlayerList from '@/components/PlayerList.vue'
 import Hand from '@/components/Hand.vue'
-import { GameData } from '@/util/GameData'
+import { GameData, Stage } from '@/util/GameData'
 import { PlayClient } from '@/util/PlayClient'
 
 @Component({
@@ -33,6 +33,20 @@ export default class Game extends Vue {
   @Prop({ type: Object, required: true }) gameData!: GameData
   @Prop({ required: true }) name!: string
   @Prop({ type: Object, required: true }) client!: PlayClient
+
+  get canPlayFromHand (): boolean {
+    if (!this.gameData.myTurn) {
+      return false
+    }
+
+    switch (this.gameData.stage) {
+      case Stage.AwaitingClue:
+      case Stage.CollectingCards:
+        return true
+      default:
+        return false
+    }
+  }
 
   private makeClue (data: { card: string, clue: string }) {
     this.client.makeClue(data)
