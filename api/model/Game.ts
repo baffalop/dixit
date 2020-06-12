@@ -65,6 +65,7 @@ export default class Game {
     if (this.turn === null) {
       this.turn = this.players.indexOf(player)
     }
+    player.setCanPlay(false)
     this.allPlayersCanPlay()
 
     this.broadcast()
