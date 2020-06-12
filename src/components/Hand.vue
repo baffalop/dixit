@@ -4,7 +4,10 @@
       v-for="card in cards"
       :key="card"
       class="card"
-      :class="{ selectable: !hasSelected, selected: cardIsSelected(card) }"
+      :class="{
+        selectable: canPlay && !hasSelected,
+        selected: cardIsSelected(card),
+      }"
     >
       <img
         :src="cardSrc(card)"
