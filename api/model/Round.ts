@@ -33,8 +33,10 @@ export default class Round {
     if (playingPlayerWon)
       this.playedCard.getPlayedBy().giveScore(3)
 
-    for (const player of this.playedCard.allGuesses()) {
-      player.giveScore(3)
+    if (playingPlayerWon) {
+      for (const player of this.playedCard.allGuesses()) {
+        player.giveScore(3)
+      }
     }
 
     for (const card of this.cards.all()) {
