@@ -6,6 +6,7 @@
       :cards="gameData.table"
       :stage="gameData.stage"
       :can-play="canPlayFromTable"
+      @guess="guessCard"
     />
 
     <PlayerList :players="gameData.players" :me="name" />
@@ -68,6 +69,11 @@ export default class Game extends Vue {
 
   private playCard (data: { card: string }) {
     this.client.playCard(data)
+    this.gameData.canPlay = false
+  }
+
+  private guessCard (data: { card: string }) {
+    this.client.guess(data)
     this.gameData.canPlay = false
   }
 }

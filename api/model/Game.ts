@@ -160,9 +160,10 @@ export default class Game {
 
   public transformGameDataFor (player: Player, data: GameData): GameData {
     if (this.getStage() == Stage.CollectingCards && player !== this.getPlayerWhoseTurnItIs()) {
-      const dataClone = JSON.parse(JSON.stringify(data))
-      dataClone.table.fill('back')
-      return dataClone
+      return {
+        ...data,
+        table: Array.from(data.table).fill('back'),
+      }
     }
     return data
   }

@@ -21,7 +21,8 @@
       >
         <form @submit.prevent="onPlay">
           <input v-if="stage == stages.AwaitingClue" v-model="clue" />
-          <input type="submit" value="Play Card" />
+          <input v-if="stage == stages.Guessing" type="submit" value="Guess Card" />
+          <input v-else type="submit" value="Play Card" />
         </form>
       </div>
 
@@ -62,6 +63,12 @@ export default class Hand extends Vue {
 
       case Stage.CollectingCards:
         this.$emit('play', {
+          card: this.selected,
+        })
+        break
+
+      case Stage.Guessing:
+        this.$emit('guess', {
           card: this.selected,
         })
         break
