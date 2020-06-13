@@ -103,7 +103,10 @@ export default class Game {
     if (this.getStage() == Stage.Scoring) {
       this.round!.score()
       this.broadcast()
-      setTimeout(() => this.passTurn(), 10000)
+      setTimeout(() => {
+        this.passTurn()
+        this.broadcast()
+      }, 10000)
     }
   }
 
