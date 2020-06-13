@@ -63,8 +63,9 @@ export default class Game {
     }
 
     if (this.turn === null) {
-      this.turn = this.players.indexOf(player)
+      this.setTurn(this.players.indexOf(player))
     }
+
     player.setCanPlay(false)
     this.allPlayersCanPlay()
 
@@ -152,9 +153,18 @@ export default class Game {
     const data = this.getGameData()
     for (const player of this.players) {
       if (player !== from) {
-        player.send(data)
+        player.send(this.transformGameDataFor(player, data))
       }
     }
+  }
+
+  public transformGameDataFor (player: Player, data: GameData): GameData {
+    if (this.getStage() == Stage.CollectingCards && player !== this.getPlayerWhoseTurnItIs()) {
+      const dataClone = JSON.parse(JSON.stringify(data))
+      dataClone.table.fill('back')
+      return dataClone
+    }
+    return data
   }
 
   public sendGameData (to: Player) {
@@ -168,6 +178,7 @@ export default class Game {
       turn: this.turn,
       stage: this.getStage(),
       clue: this.round?.clue || null,
+      table: this.round ? this.round.getTable() : []
     }
   }
 
@@ -223,8 +234,12 @@ export default class Game {
     this.setTurn((this.turn + 1) % this.players.length)
   }
 
+  private getPlayerWhoseTurnItIs (): Player | null {
+    return this.turn === null ? null : this.players[this.turn]
+  }
+
   private allPlayersCanPlay () {
-    const playerWhoseTurnItIs = this.turn === null ? null : this.players[this.turn]
+    const playerWhoseTurnItIs = this.getPlayerWhoseTurnItIs()
     this.players.forEach(player => player !== playerWhoseTurnItIs && player.setCanPlay(true))
   }
 

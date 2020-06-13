@@ -46,6 +46,10 @@ export default class Round {
     }
   }
 
+  public getTable (): string[] {
+    return this.cards.all().map(card => card.name)
+  }
+
   public countCards (): number {
     return this.cards.length()
   }

@@ -3,7 +3,7 @@
     <h1 v-if="gameData.clue" class="clue">{{ gameData.clue }}</h1>
 
     <Hand
-      :cards="table"
+      :cards="gameData.table"
       :stage="gameData.stage"
       :can-play="canPlayFromTable"
     />
@@ -43,16 +43,6 @@ export default class Game extends Vue {
   @Prop({ required: true }) name!: string
   @Prop({ type: Object, required: true }) client!: PlayClient
 
-  get table (): string[] {
-    switch (this.gameData.stage) {
-      case Stage.CollectingCards:
-        return this.tableOfBacks()
-
-      default:
-        return []
-    }
-  }
-
   get canPlayFromHand (): boolean {
     if (!this.gameData.canPlay) {
       return false
@@ -69,15 +59,6 @@ export default class Game extends Vue {
 
   get canPlayFromTable (): boolean {
     return this.gameData.canPlay && this.gameData.stage == Stage.Guessing
-  }
-
-  private tableOfBacks (): string[] {
-    const playersWhoveBeen = this.gameData.players.filter(player => !player.canPlay).length
-    const cards = []
-    for (let i = 0; i < playersWhoveBeen; i++) {
-      cards.push('back')
-    }
-    return cards
   }
 
   private makeClue (data: { card: string, clue: string }) {

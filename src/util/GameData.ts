@@ -27,6 +27,7 @@ export interface GameData {
   canPlay: boolean
   stage: Stage
   clue: string | null
+  table: string[]
 }
 
 export function isGameData (value: object): value is GameData {
@@ -37,6 +38,7 @@ export function isGameData (value: object): value is GameData {
     canPlay,
     stage,
     clue,
+    table,
   } = (value as GameData)
 
   return (
@@ -47,6 +49,7 @@ export function isGameData (value: object): value is GameData {
     typeof stage == 'string' &&
     (typeof clue == 'string' || clue === null) &&
     hand.every(card => typeof card == 'string') &&
+    table.every(card => typeof card == 'string') &&
     players.every(isPlayer)
   )
 }
